@@ -188,8 +188,8 @@ button { color: inherit; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
-  .vizu-motion .vizu-reveal:not(.is-visible) { opacity: 1; transform: none; }
+  html:not(.vizu-motion-enabled) *, html:not(.vizu-motion-enabled) *::before, html:not(.vizu-motion-enabled) *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  html.vizu-motion:not(.vizu-motion-enabled) .vizu-reveal:not(.is-visible) { opacity: 1; transform: none; }
 }
 
 @media (forced-colors: active) {
@@ -283,6 +283,7 @@ html:not(.vizu-has-js) .vizu-header { position: absolute; }
 .vizu-final-actions a { display: inline-flex; align-items: center; min-height: 48px; border: 1px solid #c9b18f; border-radius: 8px; padding: .9rem 1.2rem; text-decoration: none; font-size: .75rem; }
 .vizu-final-actions a:first-child { background: var(--vizu-gold); color: #111; }
 .vizu-motion-toggle { min-height: 48px; width: fit-content; border: 1px solid #49443e; border-radius: 8px; padding: .7rem 1rem; background: transparent; font: inherit; font-size: .7rem; cursor: pointer; }
+.vizu-hero-motion { margin-top: 1.25rem; color: var(--vizu-gold-light); }
 :focus-visible { outline: 3px solid var(--vizu-gold); outline-offset: 5px; }
 .vizu-connection :focus-visible, .vizu-platform-beauty :focus-visible { outline-color: #6f5537; }
 .vizu-paused *, .vizu-paused *::before, .vizu-paused *::after { animation-play-state: paused !important; transition: none !important; scroll-behavior: auto !important; }
@@ -306,4 +307,4 @@ html:not(.vizu-has-js) .vizu-header { position: absolute; }
  .vizu-bridge { gap: .7rem; margin-top: 3rem; } .vizu-bridge span { font-size: .5rem; letter-spacing: .02em; } .vizu-bridge b { font-size: 1rem; } .vizu-bridge i { flex: 1; }
  .vizu-faq { gap: 1.5rem; } .vizu-faq h2 { font-size: 2rem; } .vizu-final-actions { flex-direction: column; align-items: flex-start; } .vizu-manifesto { padding-inline: 1.25rem; } .vizu-manifesto h2 { font-size: 2rem; }
 }
-@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+@media (prefers-reduced-motion: reduce) { html:not(.vizu-motion-enabled) *, html:not(.vizu-motion-enabled) *::before, html:not(.vizu-motion-enabled) *::after { animation: none !important; transition: none !important; } }

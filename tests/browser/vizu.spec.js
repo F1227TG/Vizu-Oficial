@@ -69,11 +69,11 @@ test('FAQ and motion controls work on mobile', async ({ page }) => {
   await openVizu(page, 360);
   await page.locator('summary').filter({ hasText: 'As plataformas usam a mesma conta?' }).click();
   await expect(page.getByText('São produtos independentes', { exact: false })).toBeVisible();
-  const motion = page.getByRole('button', { name: 'Pausar animações' });
+  const motion = page.getByRole('button', { name: 'Pausar animações' }).first();
   await motion.click();
   await expect(page.locator('html')).toHaveClass(/vizu-paused/);
-  await expect(page.getByRole('button', { name: 'Ativar animações' })).toHaveAttribute('aria-pressed', 'true');
-  await page.getByRole('button', { name: 'Ativar animações' }).click();
+  await expect(page.getByRole('button', { name: 'Ativar animações' }).first()).toHaveAttribute('aria-pressed', 'true');
+  await page.getByRole('button', { name: 'Ativar animações' }).first().click();
   await expect(page.locator('html')).not.toHaveClass(/vizu-paused/);
 });
 
@@ -86,9 +86,43 @@ test('content and navigation remain available without JavaScript', async ({ brow
   await context.close();
 });
 
-test('reduced-motion preference keeps all presentation content visible', async ({ page }) => {
+test('motion starts on entry even with reduced device motion', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await openVizu(page, 390);
   await expect(page.locator('.vizu-platform').first()).toBeVisible();
-  await expect(page.locator('html')).not.toHaveClass(/vizu-motion/);
+  await expect(page.locator('html')).toHaveClass(/vizu-motion-enabled/);
+  await expect(page.locator('.vizu-orbit-one')).toHaveCSS('animation-name', 'vizu-orbit');
+});
+
+for (const width of [390, 1440]) {
+  test(`motion can be paused and resumed with reduced device motion at ${width}px`, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await openVizu(page, width);
+    const orbit = page.locator('.vizu-orbit-one');
+    await expect(orbit).toHaveCSS('animation-name', 'vizu-orbit');
+    const control = page.locator('.vizu-hero-motion');
+    await expect(control).toBeEnabled();
+    await control.click();
+    await expect(orbit).toHaveCSS('animation-name', 'none');
+    await control.focus();
+    await page.keyboard.press('Enter');
+    await expect(orbit).toHaveCSS('animation-name', 'vizu-orbit');
+    const initial = await orbit.evaluate(el => getComputedStyle(el).rotate);
+    await expect.poll(() => orbit.evaluate(el => getComputedStyle(el).rotate)).not.toBe(initial);
+    await expect(page.locator('.vizu-motion-toggle').last()).toHaveText('Pausar animações');
+    await control.click();
+    await expect(orbit).toHaveCSS('animation-name', 'none');
+    await expect(page.locator('.vizu-motion-toggle').last()).toHaveText('Ativar animações');
+  });
+}
+
+test('a new visit restores the active default after a manual pause', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await openVizu(page, 390);
+  await expect(page.locator('.vizu-orbit-one')).toHaveCSS('animation-name', 'vizu-orbit');
+  await page.locator('.vizu-hero-motion').click();
+  await expect(page.locator('.vizu-orbit-one')).toHaveCSS('animation-name', 'none');
+  await expect(page.locator('.vizu-platform').first()).toHaveCSS('opacity', '1');
+  await page.reload();
+  await expect(page.locator('.vizu-orbit-one')).toHaveCSS('animation-name', 'vizu-orbit');
 });

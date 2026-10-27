@@ -3,11 +3,9 @@
   root.classList.add('vizu-has-js');
   const menuButton = document.querySelector('.vizu-menu-toggle');
   const navigation = document.querySelector('#navegacao-vizu');
-  const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const reducedMotion = motionPreference.matches;
   const revealItems = [...document.querySelectorAll('.vizu-reveal')];
 
-  if (!reducedMotion && 'IntersectionObserver' in window) {
+  if ('IntersectionObserver' in window) {
     root.classList.add('vizu-motion');
     const observer = new IntersectionObserver((entries, currentObserver) => {
       for (const entry of entries) {
@@ -22,19 +20,20 @@
     revealItems.forEach(item => item.classList.add('is-visible'));
   }
 
-  const motionButton = document.querySelector('.vizu-motion-toggle');
-  let paused = reducedMotion;
+  const motionButtons = [...document.querySelectorAll('.vizu-motion-toggle')];
+  let paused = false;
   const applyMotion = () => {
     root.classList.toggle('vizu-paused', paused);
-    motionButton.setAttribute('aria-pressed', String(paused));
-    motionButton.textContent = paused ? 'Ativar animações' : 'Pausar animações';
-    motionButton.disabled = motionPreference.matches;
-    if (motionPreference.matches) motionButton.textContent = 'Movimento reduzido pelo dispositivo';
+    // Product default: motion starts on each visit; either control can pause it.
+    root.classList.toggle('vizu-motion-enabled', !paused);
+    motionButtons.forEach(button => {
+      button.setAttribute('aria-pressed', String(paused));
+      button.textContent = paused ? 'Ativar animações' : 'Pausar animações';
+      button.hidden = false;
+    });
   };
-  motionButton.hidden = false;
   applyMotion();
-  motionButton.addEventListener('click', () => { paused = !paused; applyMotion(); });
-  motionPreference.addEventListener('change', event => { paused = event.matches; applyMotion(); });
+  motionButtons.forEach(button => button.addEventListener('click', () => { paused = !paused; applyMotion(); }));
 
   const progress = document.querySelector('.vizu-reading-progress');
   let pendingFrame = false;
@@ -82,7 +81,7 @@
     link.href = world.link;
     link.firstChild.textContent = `${world.action} `;
     panelAnimation?.cancel();
-    if (!paused && !motionPreference.matches) panelAnimation = panel.animate([
+    if (!paused) panelAnimation = panel.animate([
       { opacity: .3, transform: 'translateY(12px)' }, { opacity: 1, transform: 'translateY(0)' }
     ], { duration: 350, easing: 'ease-out' });
   }));

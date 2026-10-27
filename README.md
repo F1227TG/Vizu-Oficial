@@ -32,6 +32,8 @@ npm test
 
 Os testes cobrem 320, 360, 390, 768 e 1440 pixels, navegação mobile, teclado, alternância de jornadas, FAQ, pausa de animações, movimento reduzido e conteúdo sem JavaScript.
 
+Por decisão do proprietário em 27/10/2026, as animações iniciam ativas a cada acesso, inclusive com movimento reduzido configurado no dispositivo. Os controles no início e no rodapé permitem pausar e retomar durante a visita. Sem JavaScript, o CSS continua respeitando a preferência do sistema.
+
 ## Publicar
 
 Servir a raiz como site estático. Não há comando de build nem pasta de saída separada. A criação do repositório não publica um site automaticamente. Definir o domínio antes de acrescentar URLs canônicas, sitemap ou redirecionamentos entre plataformas.
