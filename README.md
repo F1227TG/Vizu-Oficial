@@ -41,3 +41,8 @@ Servir a raiz como site estático. Não há comando de build nem pasta de saída
 Barber Hub e Beauty Hub continuam sendo produtos independentes, acessados pelos links externos presentes no HTML e no script de jornadas. A cópia antiga da apresentação no Barber Hub permanece temporariamente disponível para preservar URLs existentes; migrar os links e configurar o redirecionamento quando o novo endereço estiver publicado.
 
 Este repositório passa a ser a fonte de manutenção da apresentação Vizu. Não inclui sistemas de autenticação, dados ou painéis das plataformas.
+
+
+## Explorar — 1.1.0
+
+`explorar.html` apresenta especialidades ilustrativas, busca e categorias. Cidade e serviço seguem nos links para os catálogos reais do Barber e Beauty. Não há integração unificada de negócios nem avaliações ou preços inventados. Imagens WebP são editoriais. A página inclui controle de movimento e testes de 320 a 1440px.
